@@ -1,0 +1,52 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  elenyum_open_api:
+    public: true
+    class: 'Elenyum\OpenAPI\Controller\IndexController'
+
+  #Commands
+#  Elenyum\OpenAPI\Command\TestCommand:
+#    public: true
+#    class: 'Elenyum\OpenAPI\Command\TestCommand'
+
+#  Elenyum\OpenAPI\Controller\IndexController: ~
+#  # makes classes in src/ available to be used as services
+#  # this creates a service per class whose id is the fully-qualified class name
+  Elenyum\OpenAPI\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/ElenyumOpenAPIBundle.php'
+
+  Elenyum\OpenAPI\Service\Describer\Route\FilteredRouteCollectionBuilder:
+    arguments:
+      # @see ../src/DependencyInjection/ElenyumOpenAPIExtension.php:19
+      $options: '%elenyum_open_api.config%'
+
+  Elenyum\OpenAPI\Service\Util\ControllerReflector:
+    arguments:
+      $container: '@service_container'
+
+  routeCollection:
+    class:  '@router'
+    factory: ['@router', 'getRouteCollection']
+
+  Elenyum\OpenAPI\Service\Describer\OpenApiPhpDescriber:
+    arguments:
+      $routeCollection: '@routeCollection'
+
+    tags: [ 'elenyum.openapi.describer' ]
+
+  Elenyum\OpenAPI\Service\Describer\DefaultDescriber:
+    tags: [ 'elenyum.openapi.describer' ]
+
+  Elenyum\OpenAPI\Service\ModelDescriber\EnumModelDescriber:
+    tags: [ 'elenyum.openapi.model_describer' ]
+
+  Elenyum\OpenAPI\Service\ApiDocGenerator:
+    arguments:
+      $describers: !tagged_iterator elenyum.openapi.describer
+      $modelDescribers: !tagged_iterator elenyum.openapi.model_describer

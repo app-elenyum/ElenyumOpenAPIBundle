@@ -1,0 +1,35 @@
+{
+  "name": "elenyum/openapi",
+  "version": "0.1",
+  "type": "symfony-bundle",
+  "description": "Generates OpenAPI documentation from entity",
+  "keywords": ["api", "documentation", "doc", "rest"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Elenyum",
+      "homepage": "https://elenyum.ru/bundles/openapi"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "ext-json": "*",
+    "symfony/console": "^5.4|^6.0|^7.0",
+    "symfony/framework-bundle": "^5.4.24|^6.0|^7.0",
+
+    "zircote/swagger-php": "^4.2.15"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Elenyum\\OpenAPI\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Elenyum\\OpenAPI\\Tests\\": "tests/"
+    }
+  }
+}

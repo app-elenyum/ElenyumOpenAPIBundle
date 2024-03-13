@@ -88,9 +88,9 @@ final class ApiDocGenerator
             $modelRegistry->setLogger($this->logger);
         }
         foreach ($this->describers as $describer) {
-//            if ($describer instanceof ModelRegistryAwareInterface) {
-//                $describer->setModelRegistry($modelRegistry);
-//            }
+            if ($describer instanceof ModelRegistryAwareInterface) {
+                $describer->setModelRegistry($modelRegistry);
+            }
             $describer->describe($this->openApi);
         }
 

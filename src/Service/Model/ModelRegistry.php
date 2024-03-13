@@ -3,6 +3,7 @@
 namespace Elenyum\OpenAPI\Service\Model;
 
 use Elenyum\OpenAPI\Service\ModelDescriber\ModelDescriberInterface;
+use Elenyum\OpenAPI\Service\ModelDescriber\ModelRegistryAwareInterface;
 use Elenyum\OpenAPI\Service\OpenApiPhp\Util;
 use OpenApi\Annotations as OA;
 use Psr\Log\LoggerAwareTrait;
@@ -75,9 +76,9 @@ final class ModelRegistry
             foreach ($tmp as $name => $model) {
                 $schema = null;
                 foreach ($this->modelDescribers as $modelDescriber) {
-//                    if ($modelDescriber instanceof ModelRegistryAwareInterface) {
-//                        $modelDescriber->setModelRegistry($this);
-//                    }
+                    if ($modelDescriber instanceof ModelRegistryAwareInterface) {
+                        $modelDescriber->setModelRegistry($this);
+                    }
                     if ($modelDescriber->supports($model)) {
                         $schema = Util::getSchema($this->api, $name);
                         $modelDescriber->describe($model, $schema);

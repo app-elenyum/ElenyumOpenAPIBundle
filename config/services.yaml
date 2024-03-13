@@ -31,22 +31,57 @@ services:
       $container: '@service_container'
 
   routeCollection:
-    class:  '@router'
+    class:  'Symfony\Component\Routing\Router'
     factory: ['@router', 'getRouteCollection']
 
   Elenyum\OpenAPI\Service\Describer\OpenApiPhpDescriber:
     arguments:
       $routeCollection: '@routeCollection'
+      $filteredRouteCollectionBuilder: '@Elenyum\OpenAPI\Service\Describer\Route\FilteredRouteCollectionBuilder'
 
     tags: [ 'elenyum.openapi.describer' ]
 
   Elenyum\OpenAPI\Service\Describer\DefaultDescriber:
     tags: [ 'elenyum.openapi.describer' ]
+    arguments:
+      # @see ../src/DependencyInjection/ElenyumOpenAPIExtension.php:19
+      $options: '%elenyum_open_api.config%'
 
   Elenyum\OpenAPI\Service\ModelDescriber\EnumModelDescriber:
+    tags: [ 'elenyum.openapi.model_describer' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\IntegerPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\StringPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\ArrayPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\PropertyDescriber:
+    arguments:
+      $propertyDescribers: !tagged_iterator elenyum.openapi.property
+    tags: [ 'elenyum.openapi.property_describer' ]
+
+  Elenyum\OpenAPI\Service\ModelDescriber\ObjectModelDescriber:
+    arguments:
+      $options: '%elenyum_open_api.config%'
+      $propertyDescribers: !tagged_iterator elenyum.openapi.property_describer
     tags: [ 'elenyum.openapi.model_describer' ]
 
   Elenyum\OpenAPI\Service\ApiDocGenerator:
     arguments:
       $describers: !tagged_iterator elenyum.openapi.describer
       $modelDescribers: !tagged_iterator elenyum.openapi.model_describer
+
+  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapQueryStringDescriber:
+    tags: [ 'elenyum.openapi.route_argument_describer' ]
+
+  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapRequestPayloadDescriber:
+    tags: [ 'elenyum.openapi.route_argument_describer' ]
+
+  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapQueryParameterDescriber:
+    tags: [ 'elenyum.openapi.route_argument_describer' ]
+
+

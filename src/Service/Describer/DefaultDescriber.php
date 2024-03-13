@@ -29,16 +29,26 @@ final class DefaultDescriber implements DescriberInterface
      */
     public const OPERATIONS = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'];
 
+    public function __construct(
+        private array $options = []
+    ) {
+    }
+
     public function describe(OA\OpenApi $api)
     {
         // Info
         /** @var OA\Info $info */
         $info = self::getChild($api, OA\Info::class);
-        if (Generator::UNDEFINED === $info->title) {
-            $info->title = '';
-        }
-        if (Generator::UNDEFINED === $info->version) {
-            $info->version = '0.0.0';
+        if (!empty($this->options['documentation']) && !empty($this->options['documentation']['info'])) {
+            if (Generator::UNDEFINED === $info->title) {
+                $info->title = $this->options['documentation']['info']['title'];
+            }
+            if (Generator::UNDEFINED === $info->version) {
+                $info->version = $this->options['documentation']['info']['version'];
+            }
+            if (Generator::UNDEFINED === $info->description) {
+                $info->description = $this->options['documentation']['info']['description'] ?? '';
+            }
         }
 
         // Paths

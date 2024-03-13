@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the NelmioApiDocBundle package.
- *
- * (c) Nelmio
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Elenyum\OpenAPI\Service\Describer\Route;
 
 use Doctrine\Common\Annotations\Reader;
@@ -74,6 +65,7 @@ final class FilteredRouteCollectionBuilder
     {
         $filteredRoutes = new RouteCollection();
         foreach ($routes->all() as $name => $route) {
+
             if ($this->matchPath($route)
                 && $this->matchHost($route)
                 && $this->matchAnnotation($route)

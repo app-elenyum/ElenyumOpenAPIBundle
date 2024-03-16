@@ -4,6 +4,7 @@ namespace Elenyum\OpenAPI\Service\Describer\Route;
 
 use Doctrine\Common\Annotations\Reader;
 use Elenyum\OpenAPI\Attribute\Areas;
+use Elenyum\OpenAPI\Attribute\Tag;
 use Elenyum\OpenAPI\Service\Util\ControllerReflector;
 use OpenApi\Annotations\AbstractAnnotation;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,13 +39,15 @@ final class FilteredRouteCollectionBuilder
                 'path_patterns' => [],
                 'host_patterns' => [],
                 'name_patterns' => [],
-                'with_annotation' => false,
+                'with_annotation' => true,
+                'with_tag' => true,
                 'disable_default_routes' => false
             ])
             ->setAllowedTypes('path_patterns', 'string[]')
             ->setAllowedTypes('host_patterns', 'string[]')
             ->setAllowedTypes('name_patterns', 'string[]')
             ->setAllowedTypes('with_annotation', 'boolean')
+            ->setAllowedTypes('with_tag', 'boolean')
             ->setAllowedTypes('disable_default_routes', 'boolean')
         ;
 
@@ -65,10 +68,10 @@ final class FilteredRouteCollectionBuilder
     {
         $filteredRoutes = new RouteCollection();
         foreach ($routes->all() as $name => $route) {
-
             if ($this->matchPath($route)
                 && $this->matchHost($route)
                 && $this->matchAnnotation($route)
+                && $this->matchTag($route)
                 && $this->matchName($name)
                 && $this->defaultRouteDisabled($route)
             ) {
@@ -81,6 +84,9 @@ final class FilteredRouteCollectionBuilder
 
     private function matchPath(Route $route): bool
     {
+        if (true === $this->options['with_tag']) {
+            return true;
+        }
         foreach ($this->options['path_patterns'] as $pathPattern) {
             if (preg_match('{'.$pathPattern.'}', $route->getPath())) {
                 return true;
@@ -147,6 +153,40 @@ final class FilteredRouteCollectionBuilder
         return (null !== $areas) ? $areas->has($this->area) : false;
     }
 
+    private function matchTag(Route $route): bool
+    {
+        if (false === $this->options['with_tag']) {
+            return true;
+        }
+
+        $reflectionMethod = $this->controllerReflector->getReflectionMethod($route->getDefault('_controller'));
+
+        if (null === $reflectionMethod) {
+            return false;
+        }
+
+        /** @var Tag|null $module */
+        $module = $this->getAttributesAsAnnotation($reflectionMethod, Tag::class)[0] ?? null;
+
+        if (null === $module) {
+            /** @var Tag|null $module */
+            $module = $this->getAttributesAsAnnotation($reflectionMethod->getDeclaringClass(), Tag::class)[0] ?? null;
+
+            if (null === $module && null !== $this->annotationReader) {
+                /** @var Tag|null $module */
+                $module = $this->annotationReader->getMethodAnnotation(
+                    $reflectionMethod,
+                    Tag::class
+                );
+
+                if (null === $module) {
+                    $module = $this->annotationReader->getClassAnnotation($reflectionMethod->getDeclaringClass(), Tag::class);
+                }
+            }
+        }
+        return $module instanceof Tag;
+    }
+
     private function defaultRouteDisabled(Route $route): bool
     {
         if (false === $this->options['disable_default_routes']) {
@@ -172,7 +212,7 @@ final class FilteredRouteCollectionBuilder
         }
 
         foreach ($annotations as $annotation) {
-            if (false !== strpos(get_class($annotation), 'Nelmio\\ApiDocBundle\\Annotation')
+            if (false !== strpos(get_class($annotation), 'Elenyum\\OpenAPI\\Attribute')
                 || false !== strpos(get_class($annotation), 'OpenApi\\Annotations')
                 || false !== strpos(get_class($annotation), 'OpenApi\\Attributes')
             ) {

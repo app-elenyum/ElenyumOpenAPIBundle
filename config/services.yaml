@@ -59,6 +59,30 @@ services:
   Elenyum\OpenAPI\Service\PropertyDescriber\ArrayPropertyDescriber:
     tags: [ 'elenyum.openapi.property' ]
 
+  Elenyum\OpenAPI\Service\PropertyDescriber\BooleanPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\CompoundPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\DateTimePropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\DictionaryPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\FloatPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\NullablePropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\ObjectPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
+  Elenyum\OpenAPI\Service\PropertyDescriber\RequiredPropertyDescriber:
+    tags: [ 'elenyum.openapi.property' ]
+
   Elenyum\OpenAPI\Service\PropertyDescriber\PropertyDescriber:
     arguments:
       $propertyDescribers: !tagged_iterator elenyum.openapi.property

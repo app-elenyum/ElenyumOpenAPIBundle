@@ -61,7 +61,8 @@ final class Configuration implements ConfigurationInterface
                             'default' => [
                                 'path_patterns' => [],
                                 'host_patterns' => [],
-                                'with_annotation' => true,
+                                'with_annotation' => false,
+                                'with_tag' => true,
                                 'name_patterns' => [],
                                 'disable_default_routes' => false,
                             ],
@@ -101,8 +102,12 @@ final class Configuration implements ConfigurationInterface
                                 ->prototype('scalar')->end()
                             ->end()
                             ->booleanNode('with_annotation')
-                                ->defaultTrue()
+                                ->defaultFalse()
                                 ->info('whether to filter by annotation')
+                            ->end()
+                            ->booleanNode('with_tag')
+                                ->defaultTrue()
+                                ->info('whether to filter by tag')
                             ->end()
                             ->booleanNode('disable_default_routes')
                                 ->defaultFalse()

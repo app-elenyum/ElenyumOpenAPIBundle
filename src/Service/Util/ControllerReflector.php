@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the NelmioApiDocBundle package.
- *
- * (c) Nelmio
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Elenyum\OpenAPI\Service\Util;
 
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
@@ -80,7 +71,7 @@ class ControllerReflector
             try {
                 $controller = $this->controllerNameParser->parse($controller);
 
-                trigger_deprecation('nelmio/api-doc-bundle', '3.6', 'Referencing controllers with %s is deprecated since Symfony 4.1, use "%s" instead.', $deprecatedNotation, $controller);
+                trigger_deprecation('elenyum/openapi-bundle', '3.6', 'Referencing controllers with %s is deprecated since Symfony 4.1, use "%s" instead.', $deprecatedNotation, $controller);
             } catch (\InvalidArgumentException $e) {
                 // unable to optimize unknown notation
             }

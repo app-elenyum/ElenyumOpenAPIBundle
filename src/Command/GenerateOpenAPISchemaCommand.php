@@ -13,6 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     description: 'Generated open api schema (documentation)',
     aliases: ['e:g']
 )]
+/** @todo сделать команду для генерации документации в open api спецификации */
 class GenerateOpenAPISchemaCommand extends Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int

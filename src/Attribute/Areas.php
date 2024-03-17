@@ -2,6 +2,8 @@
 
 namespace Elenyum\OpenAPI\Attribute;
 
+use InvalidArgumentException;
+
 /**
  * @Annotation
  */
@@ -18,22 +20,18 @@ final class Areas
         }
 
         if ([] === $properties['value']) {
-            throw new \InvalidArgumentException('An array of areas was expected');
+            throw new InvalidArgumentException('An array of areas was expected');
         }
 
         $areas = [];
         foreach ($properties['value'] as $area) {
             if (!is_string($area)) {
-                throw new \InvalidArgumentException('An area must be given as a string');
+                throw new InvalidArgumentException('An area must be given as a string');
             }
 
             if (!in_array($area, $areas)) {
                 $areas[] = $area;
             }
-        }
-
-        if (0 === count($areas)) {
-            throw new \LogicException('At least one area is expected');
         }
 
         $this->areas = $areas;

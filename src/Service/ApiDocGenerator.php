@@ -5,8 +5,8 @@ namespace Elenyum\OpenAPI\Service;
 use Elenyum\OpenAPI\Service\Describer\DescriberInterface;
 use Elenyum\OpenAPI\Service\Describer\ModelRegistryAwareInterface;
 use Elenyum\OpenAPI\Service\Model\ModelRegistry;
+use Elenyum\OpenAPI\Service\ModelDescriber\ModelDescriberInterface;
 use Elenyum\OpenAPI\Service\OpenApiPhp\ModelRegister;
-use Nelmio\ApiDocBundle\ModelDescriber\ModelDescriberInterface;
 use OpenApi\Analysis;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Context;
@@ -15,7 +15,7 @@ use OpenApi\Processors\ProcessorInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareTrait;
 
-final class ApiDocGenerator
+class ApiDocGenerator
 {
     use LoggerAwareTrait;
 
@@ -68,12 +68,12 @@ final class ApiDocGenerator
             return $this->openApi;
         }
 
-//        if ($this->cacheItemPool) {
-//            $item = $this->cacheItemPool->getItem($this->cacheItemId);
-//            if ($item->isHit()) {
-//                return $this->openApi = $item->get();
-//            }
-//        }
+        if ($this->cacheItemPool) {
+            $item = $this->cacheItemPool->getItem($this->cacheItemId);
+            if ($item->isHit()) {
+                return $this->openApi = $item->get();
+            }
+        }
 
         if ($this->openApiVersion) {
             $this->generator->setVersion($this->openApiVersion);
@@ -128,7 +128,6 @@ final class ApiDocGenerator
 
         // Remove OperationId processor as we use a lot of generated annotations which do not have enough information in their context
         // to generate these ids properly.
-        // @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::createContext
         foreach ($processors as $key => $processor) {
             if ($processor instanceof \OpenApi\Processors\OperationId) {
                 unset($processors[$key]);

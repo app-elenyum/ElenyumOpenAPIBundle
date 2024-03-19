@@ -10,7 +10,7 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ModelRegistry
+class ModelRegistry
 {
     use LoggerAwareTrait;
 

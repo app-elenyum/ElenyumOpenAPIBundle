@@ -16,10 +16,14 @@
     "ext-json": "*",
     "symfony/console": "^5.4|^6.0|^7.0",
     "symfony/framework-bundle": "^5.4.24|^6.0|^7.0",
+    "symfony/validator": "^7.0",
     "zircote/swagger-php": "^4.2.15"
   },
   "require-dev": {
+    "doctrine/annotations": "^2.0",
+    "phpdocumentor/reflection-docblock": "^5.3",
     "phpunit/phpunit": "^11.0",
+    "symfony/options-resolver": "^7.0",
     "symfony/property-info": "^7.0"
   },
   "config": {

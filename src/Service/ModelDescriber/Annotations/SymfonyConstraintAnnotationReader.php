@@ -52,74 +52,97 @@ class SymfonyConstraintAnnotationReader
         }
     }
 
+    private function notNull(Constraint $annotation): bool
+    {
+        if ($annotation instanceof Assert\NotBlank && \property_exists($annotation, 'allowNull') && $annotation->allowNull) {
+            // The field is optional
+            return false;
+        }
+
+        // The field is required
+        if (null === $this->schema) {
+            return false;
+        }
+
+        $propertyName = Util::getSchemaPropertyName($this->schema, $property);
+        if (null === $propertyName) {
+            return false;
+        }
+
+        $existingRequiredFields = Generator::UNDEFINED !== $this->schema->required ? $this->schema->required : [];
+        $existingRequiredFields[] = $propertyName;
+
+        $this->schema->required = array_values(array_unique($existingRequiredFields));
+        return true;
+    }
+
     private function processPropertyAnnotations($reflection, OA\Property $property, $annotations)
     {
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof Assert\NotBlank || $annotation instanceof Assert\NotNull) {
-                // To support symfony/validator < 4.3
-                if ($annotation instanceof Assert\NotBlank && \property_exists($annotation, 'allowNull') && $annotation->allowNull) {
-                    // The field is optional
-                    return;
-                }
-
-                // The field is required
-                if (null === $this->schema) {
-                    return;
-                }
-
-                $propertyName = Util::getSchemaPropertyName($this->schema, $property);
-                if (null === $propertyName) {
-                    return;
-                }
-
-                $existingRequiredFields = Generator::UNDEFINED !== $this->schema->required ? $this->schema->required : [];
-                $existingRequiredFields[] = $propertyName;
-
-                $this->schema->required = array_values(array_unique($existingRequiredFields));
-            } elseif ($annotation instanceof Assert\Length) {
+        $map = [
+            Assert\NotBlank::class => function (Constraint $annotation) {
+                return $this->notNull($annotation);
+            },
+            Assert\NotNull::class => function (Constraint $annotation) {
+                return $this->notNull($annotation);
+            },
+            Assert\Length::class => function (Constraint $annotation) use ($property) {
                 if (isset($annotation->min)) {
                     $property->minLength = (int) $annotation->min;
                 }
                 if (isset($annotation->max)) {
                     $property->maxLength = (int) $annotation->max;
                 }
-            } elseif ($annotation instanceof Assert\Regex) {
+            },
+            Assert\Regex::class => function (Constraint $annotation) use ($property) {
                 $this->appendPattern($property, $annotation->getHtmlPattern());
-            } elseif ($annotation instanceof Assert\Count) {
+            },
+            Assert\Count::class => function (Constraint $annotation) use ($property) {
                 if (isset($annotation->min)) {
                     $property->minItems = (int) $annotation->min;
                 }
                 if (isset($annotation->max)) {
                     $property->maxItems = (int) $annotation->max;
                 }
-            } elseif ($annotation instanceof Assert\Choice) {
+            },
+            Assert\Choice::class => function (Constraint $annotation) use ($property, $reflection) {
+                if(!$annotation instanceof Assert\Choice) {
+                    return false;
+                }
                 $this->applyEnumFromChoiceConstraint($property, $annotation, $reflection);
-            } elseif ($annotation instanceof Assert\Range) {
+            },
+            Assert\Range::class => function (Constraint $annotation) use ($property) {
                 if (\is_int($annotation->min)) {
                     $property->minimum = $annotation->min;
                 }
                 if (\is_int($annotation->max)) {
                     $property->maximum = $annotation->max;
                 }
-            } elseif ($annotation instanceof Assert\LessThan) {
+            },
+            Assert\LessThan::class => function (Constraint $annotation) use ($property) {
                 if (\is_int($annotation->value)) {
                     $property->exclusiveMaximum = true;
                     $property->maximum = $annotation->value;
                 }
-            } elseif ($annotation instanceof Assert\LessThanOrEqual) {
+            },
+            Assert\LessThanOrEqual::class => function (Constraint $annotation) use ($property) {
                 if (\is_int($annotation->value)) {
                     $property->maximum = $annotation->value;
                 }
-            } elseif ($annotation instanceof Assert\GreaterThan) {
+            },
+            Assert\GreaterThan::class => function (Constraint $annotation) use ($property) {
                 if (\is_int($annotation->value)) {
                     $property->exclusiveMinimum = true;
                     $property->minimum = $annotation->value;
                 }
-            } elseif ($annotation instanceof Assert\GreaterThanOrEqual) {
+            },
+            Assert\GreaterThanOrEqual::class => function (Constraint $annotation) use ($property) {
                 if (\is_int($annotation->value)) {
                     $property->minimum = $annotation->value;
                 }
             }
+        ];
+        foreach ($annotations as $annotation) {
+            $map[get_class($annotation)]($annotation);
         }
     }
 

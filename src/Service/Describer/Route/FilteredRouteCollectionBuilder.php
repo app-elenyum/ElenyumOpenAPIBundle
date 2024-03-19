@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-final class FilteredRouteCollectionBuilder
+class FilteredRouteCollectionBuilder
 {
     /** @var Reader|null */
     private $annotationReader;

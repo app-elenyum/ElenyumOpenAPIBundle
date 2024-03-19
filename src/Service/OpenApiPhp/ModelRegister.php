@@ -15,7 +15,7 @@ use Symfony\Component\PropertyInfo\Type;
  *
  * @internal
  */
-final class ModelRegister
+class ModelRegister
 {
     /** @var ModelRegistry */
     private $modelRegistry;

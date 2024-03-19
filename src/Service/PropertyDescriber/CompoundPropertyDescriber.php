@@ -4,6 +4,7 @@ namespace Elenyum\OpenAPI\Service\PropertyDescriber;
 
 use Elenyum\OpenAPI\Service\Describer\ModelRegistryAwareInterface;
 use Elenyum\OpenAPI\Service\Model\ModelRegistry;
+use Elenyum\OpenAPI\Service\OpenApiPhp\Util;
 use OpenApi\Annotations as OA;
 use OpenApi\Generator;
 
@@ -16,7 +17,7 @@ class CompoundPropertyDescriber implements PropertyDescriberInterface, ModelRegi
         foreach ($types as $type) {
             $property->oneOf[] = $schema = Util::createChild($property, OA\Schema::class, []);
 
-            $this->propertyDescriber->describe([$type], $schema, $groups, $schema, $context);
+            $this->propertyDescriber->describe([$type], $property, $groups, $schema, $context);
         }
     }
 

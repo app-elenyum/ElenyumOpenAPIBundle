@@ -52,7 +52,7 @@ class SymfonyConstraintAnnotationReader
         }
     }
 
-    private function notNull(Constraint $annotation): bool
+    private function notNull(Constraint $annotation, OA\Property $property): bool
     {
         if ($annotation instanceof Assert\NotBlank && \property_exists($annotation, 'allowNull') && $annotation->allowNull) {
             // The field is optional
@@ -79,11 +79,11 @@ class SymfonyConstraintAnnotationReader
     private function processPropertyAnnotations($reflection, OA\Property $property, $annotations)
     {
         $map = [
-            Assert\NotBlank::class => function (Constraint $annotation) {
-                return $this->notNull($annotation);
+            Assert\NotBlank::class => function (Constraint $annotation) use ($property) {
+                return $this->notNull($annotation, $property);
             },
-            Assert\NotNull::class => function (Constraint $annotation) {
-                return $this->notNull($annotation);
+            Assert\NotNull::class => function (Constraint $annotation) use ($property) {
+                return $this->notNull($annotation, $property);
             },
             Assert\Length::class => function (Constraint $annotation) use ($property) {
                 if (isset($annotation->min)) {

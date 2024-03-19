@@ -1,10 +1,10 @@
 <?php
 
-namespace Elenyum\OpenAPI\Tests\DependencyInjection;
+namespace Elenyum\OpenAPI\Tests\Service\DependencyInjection;
 
+use Elenyum\OpenAPI\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
-use Elenyum\OpenAPI\DependencyInjection\Configuration;
 
 class ConfigurationTest extends TestCase
 {

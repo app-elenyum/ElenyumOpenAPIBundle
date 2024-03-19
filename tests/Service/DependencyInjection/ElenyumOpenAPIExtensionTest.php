@@ -1,11 +1,11 @@
 <?php
 
-namespace Elenyum\OpenAPI\Tests\DependencyInjection;
+namespace Elenyum\OpenAPI\Tests\Service\DependencyInjection;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Elenyum\OpenAPI\DependencyInjection\ElenyumOpenAPIExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 
 class ElenyumOpenAPIExtensionTest extends TestCase

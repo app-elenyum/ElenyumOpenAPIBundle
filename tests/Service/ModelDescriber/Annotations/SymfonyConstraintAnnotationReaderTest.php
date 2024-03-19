@@ -26,11 +26,10 @@ class SymfonyConstraintAnnotationReaderTest extends TestCase
     {
         $reflectionProperty = new ReflectionProperty(SomeClass::class, 'someProperty');
         $property = new OA\Property([]);
-        $schema = new OA\Schema([]);
-        $notBlankConstraint = new Assert\NotBlank();
-
         $context = new Context([]);
         $property->_context = $context;
+        $schema = new OA\Schema(['test' => $property]);
+        $notBlankConstraint = new Assert\NotBlank();
 
         $this->reader->method('getPropertyAnnotations')
             ->willReturn([$notBlankConstraint]);
@@ -42,8 +41,4 @@ class SymfonyConstraintAnnotationReaderTest extends TestCase
         $this->assertEquals(Generator::UNDEFINED, $schema->required);
     }
 
-    // Additional test methods for other constraint types and validation groups
-
-    // You can follow the test pattern created in this test method to create additional test methods
-    // for other types of constraints such as `Length`, `Regex`, `Count`, etc.
 }

@@ -2,7 +2,6 @@
 
 namespace Elenyum\OpenAPI\Service\Util;
 
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -13,17 +12,11 @@ class ControllerReflector
 {
     private $container;
 
-    private $controllerNameParser;
-
     private $controllers = [];
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        if (1 < \func_num_args() && func_get_arg(1) instanceof ControllerNameParser) {
-            $this->controllerNameParser = func_get_arg(1);
-        }
     }
 
     /**
@@ -63,18 +56,6 @@ class ControllerReflector
     {
         if (isset($this->controllers[$controller])) {
             return $this->controllers[$controller];
-        }
-
-        if ($this->controllerNameParser && false === strpos($controller, '::') && 2 === substr_count($controller, ':')) {
-            $deprecatedNotation = $controller;
-
-            try {
-                $controller = $this->controllerNameParser->parse($controller);
-
-                trigger_deprecation('elenyum/openapi-bundle', '3.6', 'Referencing controllers with %s is deprecated since Symfony 4.1, use "%s" instead.', $deprecatedNotation, $controller);
-            } catch (\InvalidArgumentException $e) {
-                // unable to optimize unknown notation
-            }
         }
 
         if (preg_match('#(.+)::([\w]+)#', $controller, $matches)) {

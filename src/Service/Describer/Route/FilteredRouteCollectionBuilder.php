@@ -14,16 +14,16 @@ use Symfony\Component\Routing\RouteCollection;
 class FilteredRouteCollectionBuilder
 {
     /** @var Reader|null */
-    private $annotationReader;
+    private ?Reader $annotationReader;
 
     /** @var ControllerReflector */
-    private $controllerReflector;
+    private ControllerReflector $controllerReflector;
 
     /** @var string */
-    private $area;
+    private string $area;
 
     /** @var array */
-    private $options;
+    private array $options;
 
     public function __construct(
         ?Reader $annotationReader,
@@ -51,13 +51,6 @@ class FilteredRouteCollectionBuilder
             ->setAllowedTypes('disable_default_routes', 'boolean')
         ;
 
-        if (array_key_exists(0, $options)) {
-            trigger_deprecation('nelmio/api-doc-bundle', '3.2', 'Passing an indexed array with a collection of path patterns as argument 1 for `%s()` is deprecated since 3.2.0, expected structure is an array containing parameterized options.', __METHOD__);
-
-            $normalizedOptions = ['path_patterns' => $options];
-            $options = $normalizedOptions;
-        }
-
         $this->annotationReader = $annotationReader;
         $this->controllerReflector = $controllerReflector;
         $this->area = $area;
@@ -70,7 +63,7 @@ class FilteredRouteCollectionBuilder
         foreach ($routes->all() as $name => $route) {
             if ($this->matchPath($route)
                 && $this->matchHost($route)
-                && $this->matchAnnotation($route)
+                && $this->matchAreas($route)
                 && $this->matchTag($route)
                 && $this->matchName($name)
                 && $this->defaultRouteDisabled($route)
@@ -118,7 +111,7 @@ class FilteredRouteCollectionBuilder
         return 0 === count($this->options['name_patterns']);
     }
 
-    private function matchAnnotation(Route $route): bool
+    private function matchAreas(Route $route): bool
     {
         if (false === $this->options['with_annotation']) {
             return true;

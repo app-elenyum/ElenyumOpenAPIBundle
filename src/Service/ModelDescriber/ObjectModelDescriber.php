@@ -46,14 +46,6 @@ class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwar
         bool $useValidationGroups = false,
         ClassMetadataFactoryInterface $classMetadataFactory = null
     ) {
-        if (is_iterable($propertyDescribers)) {
-            trigger_deprecation('nelmio/api-doc-bundle', '4.17', 'Passing an array of PropertyDescriberInterface to %s() is deprecated. Pass a single PropertyDescriberInterface instead.', __METHOD__);
-        } else {
-            if (!$propertyDescribers instanceof PropertyDescriberInterface) {
-                throw new \InvalidArgumentException(sprintf('Argument 3 passed to %s() must be an array of %s or a single %s.', __METHOD__, PropertyDescriberInterface::class, PropertyDescriberInterface::class));
-            }
-        }
-
         $this->propertyInfo = $propertyInfo;
         $this->doctrineReader = $reader;
         $this->propertyDescriber = $propertyDescribers;
@@ -111,7 +103,6 @@ class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwar
             return;
         }
 
-        // Fix for https://github.com/nelmio/NelmioApiDocBundle/issues/1756
         // The SerializerExtractor does expose private/protected properties for some reason, so we eliminate them here
         $propertyInfoProperties = array_intersect($propertyInfoProperties, $this->propertyInfo->getProperties($class, []) ?? []);
 

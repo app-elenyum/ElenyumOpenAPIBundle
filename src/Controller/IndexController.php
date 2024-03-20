@@ -26,6 +26,7 @@ final class IndexController extends AbstractController
     public function __invoke(Request $request, $area = 'default')
     {
         try {
+            $this->apiDocGenerator->setRequest($request);
             $spec = $this->apiDocGenerator->generate();
 
             return JsonResponse::fromJsonString(

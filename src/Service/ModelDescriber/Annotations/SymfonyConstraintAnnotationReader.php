@@ -252,7 +252,7 @@ class SymfonyConstraintAnnotationReader
     {
         // In order to have nicer errors
         if ($reflection instanceof \ReflectionClass) {
-            $this->setContext(\Nelmio\ApiDocBundle\OpenApiPhp\Util::createWeakContext($parentContext, [
+            $this->setContext(Util::createWeakContext($parentContext, [
                 'namespace' => $reflection->getNamespaceName(),
                 'class' => $reflection->getShortName(),
                 'filename' => $reflection->getFileName(),

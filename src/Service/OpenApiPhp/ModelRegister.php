@@ -29,14 +29,14 @@ class ModelRegister
         $this->mediaTypes = $mediaTypes;
     }
 
-    public function __invoke(Analysis $analysis, array $parentGroups = null)
+    public function __invoke(Analysis $analysis, array $inputGroups = null)
     {
         foreach ($analysis->annotations as $annotation) {
             // @Model using the ref field
             if ($annotation instanceof OA\Schema && $annotation->ref instanceof ModelAnnotation) {
                 $model = $annotation->ref;
 
-                $annotation->ref = $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $parentGroups), $model->options, $model->serializationContext));
+                $annotation->ref = $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $inputGroups), $model->options, $model->serializationContext));
 
                 // It is no longer an unmerged annotation
                 $this->detach($model, $annotation, $analysis);
@@ -62,7 +62,7 @@ class ModelRegister
             if ($annotation instanceof OA\Response || $annotation instanceof OA\RequestBody) {
                 $properties = [
                     '_context' => Util::createContext(['nested' => $annotation], $annotation->_context),
-                    'ref' => $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $parentGroups), $model->options, $model->serializationContext)),
+                    'ref' => $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $inputGroups), $model->options, $model->serializationContext)),
                 ];
 
                 foreach ($this->mediaTypes as $mediaType) {
@@ -89,7 +89,7 @@ class ModelRegister
             }
 
             $annotation->merge([new $annotationClass([
-                'ref' => $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $parentGroups), $model->options, $model->serializationContext)),
+                'ref' => $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $inputGroups), $model->options, $model->serializationContext)),
             ])]);
 
             // It is no longer an unmerged annotation
@@ -97,13 +97,13 @@ class ModelRegister
         }
     }
 
-    private function getGroups(ModelAnnotation $model, array $parentGroups = null): ?array
+    private function getGroups(ModelAnnotation $model, array $inputGroups = null): ?array
     {
         if (null === $model->groups) {
-            return $parentGroups;
+            return $inputGroups;
         }
 
-        return array_merge($parentGroups ?? [], $model->groups);
+        return array_merge($inputGroups ?? [], $model->groups);
     }
 
     private function detach(ModelAnnotation $model, OA\AbstractAnnotation $annotation, Analysis $analysis): void

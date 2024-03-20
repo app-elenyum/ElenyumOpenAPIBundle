@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the NelmioApiDocBundle package.
- *
- * (c) Nelmio
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Elenyum\OpenAPI\Service\OpenApiPhp;
 
 use OpenApi\Annotations as OA;
@@ -18,7 +9,7 @@ use OpenApi\Generator;
 /**
  * Class Util.
  *
- * This class acts as compatibility layer between NelmioApiDocBundle and swagger-php.
+ * This class acts as compatibility layer between ElenyumOpenAPIBundle and swagger-php.
  *
  * It was written to replace the GuilhemN/swagger layer as a lower effort to maintain alternative.
  *
@@ -26,26 +17,26 @@ use OpenApi\Generator;
  * of swagger Annotation classes with the following convenience methods
  * to get or create the respective Annotation instances if not found
  *
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getPath()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getSchema()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getProperty()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getOperation()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getOperationParameter()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getPath()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getSchema()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getProperty()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getOperation()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getOperationParameter()
  *
  * which in turn get or create the Annotation instances through the following more general methods
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getChild()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getCollectionItem()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::getIndexedCollectionItem()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getChild()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getCollectionItem()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::getIndexedCollectionItem()
  *
  * which then searches for an existing Annotation through
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::searchCollectionItem()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::searchIndexedCollectionItem()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::searchCollectionItem()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::searchIndexedCollectionItem()
  *
  * and if not found the Annotation creates it through
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::createCollectionItem()
- * @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::createContext()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::createCollectionItem()
+ * @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::createContext()
  *
- * The merge method @see \Nelmio\ApiDocBundle\OpenApiPhp\Util::merge() has the main purpose to be able
+ * The merge method @see \Elenyum\OpenAPI\Service\OpenApiPhp\Util::merge() has the main purpose to be able
  * to merge properties from an deeply nested array of Annotation properties in the structure of a
  * generated swagger json decoded array.
  */

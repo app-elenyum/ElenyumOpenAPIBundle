@@ -14,6 +14,7 @@ use OpenApi\Generator;
 use OpenApi\Processors\ProcessorInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 class ApiDocGenerator
 {
@@ -49,6 +50,11 @@ class ApiDocGenerator
     private $openApiVersion = null;
 
     /**
+     * @var Request
+     */
+    private Request $request;
+
+    /**
      * @param CacheItemPoolInterface|null $cacheItemPool
      * @param string|null $cacheItemId
      * @param Generator|null $generator
@@ -68,8 +74,9 @@ class ApiDocGenerator
             return $this->openApi;
         }
 
+        $group = $this->request->get('group');
         if ($this->cacheItemPool) {
-            $item = $this->cacheItemPool->getItem($this->cacheItemId);
+            $item = $this->cacheItemPool->getItem($this->cacheItemId .'_'. $group);
             if ($item->isHit()) {
                 return $this->openApi = $item->get();
             }
@@ -99,7 +106,8 @@ class ApiDocGenerator
 
         // Register model annotations
         $modelRegister = new ModelRegister($modelRegistry, $this->mediaTypes);
-        $modelRegister($analysis);
+        $groups = $group !== null ? [$group] : null;
+        $modelRegister($analysis, $groups);
 
         // Calculate the associated schemas
         $modelRegistry->registerSchemas();
@@ -135,5 +143,10 @@ class ApiDocGenerator
         }
 
         return $processors;
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
     }
 }

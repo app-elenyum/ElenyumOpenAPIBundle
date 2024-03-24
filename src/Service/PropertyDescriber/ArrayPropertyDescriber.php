@@ -2,7 +2,7 @@
 
 namespace Elenyum\OpenAPI\Service\PropertyDescriber;
 
-use Elenyum\OpenAPI\Service\Describer\ModelRegistryAwareInterface;
+use Elenyum\OpenAPI\Service\ModelDescriber\ModelRegistryAwareInterface;
 use Elenyum\OpenAPI\Service\Model\ModelRegistry;
 use Elenyum\OpenAPI\Service\OpenApiPhp\Util;
 use OpenApi\Annotations as OA;

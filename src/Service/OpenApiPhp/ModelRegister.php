@@ -35,7 +35,6 @@ class ModelRegister
             // @Model using the ref field
             if ($annotation instanceof OA\Schema && $annotation->ref instanceof ModelAnnotation) {
                 $model = $annotation->ref;
-
                 $annotation->ref = $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $inputGroups), $model->options, $model->serializationContext));
 
                 // It is no longer an unmerged annotation

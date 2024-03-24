@@ -55,17 +55,26 @@ class ApiDocGenerator
     private Request $request;
 
     /**
+     * @var array
+     */
+    private array $options;
+
+    /**
+     * @param $describers
+     * @param $modelDescribers
      * @param CacheItemPoolInterface|null $cacheItemPool
      * @param string|null $cacheItemId
      * @param Generator|null $generator
+     * @param array $options
      */
-    public function __construct($describers, $modelDescribers, CacheItemPoolInterface $cacheItemPool = null, string $cacheItemId = null, Generator $generator = null)
+    public function __construct($describers, $modelDescribers, CacheItemPoolInterface $cacheItemPool = null, string $cacheItemId = null, Generator $generator = null, array $options = [])
     {
         $this->describers = $describers;
         $this->modelDescribers = $modelDescribers;
         $this->cacheItemPool = $cacheItemPool;
-        $this->cacheItemId = $cacheItemId ?? 'openapi_doc';
+        $this->cacheItemId = $cacheItemId ?? 'elenyum_open_api';
         $this->generator = $generator ?? new Generator($this->logger);
+        $this->options = $options;
     }
 
     public function generate(): OpenApi
@@ -75,7 +84,7 @@ class ApiDocGenerator
         }
 
         $group = $this->request->get('group');
-        if ($this->cacheItemPool) {
+        if (isset($this->options['cache']['enable']) && $this->options['cache']['enable'] === true && $this->cacheItemPool) {
             $item = $this->cacheItemPool->getItem($this->cacheItemId .'_'. $group);
             if ($item->isHit()) {
                 return $this->openApi = $item->get();

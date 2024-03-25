@@ -36,38 +36,18 @@ final class Configuration implements ConfigurationInterface
                     ->example(['info' => ['title' => 'My App']])
                     ->prototype('variable')->end()
                 ->end()
-                ->arrayNode('media_types')
-                    ->info('List of enabled Media Types')
-                    ->defaultValue(['json'])
-                    ->prototype('scalar')->end()
-                ->end()
-                ->arrayNode('areas')
+                ->arrayNode('area')
                     ->info('Filter the routes that are documented')
-                    ->defaultValue(
-                        [
-                            'default' => [
-                                'path_patterns' => [],
-                                'host_patterns' => [],
-                                'with_annotation' => false,
-                                'with_tag' => true,
-                                'name_patterns' => [],
-                                'disable_default_routes' => false,
-                            ],
-                        ]
-                    )
-                    ->beforeNormalization()
+                    ->defaultValue([
+                            'path_patterns' => [],
+                            'host_patterns' => [],
+                            'with_tag' => true,
+                            'name_patterns' => [],
+                            'disable_default_routes' => false,
+                        ])->validate()
                         ->ifTrue(function ($v) {
-                            return 0 === count($v) || isset($v['path_patterns']) || isset($v['host_patterns']);
-                        })
-                        ->then(function ($v) {
-                            return ['default' => $v];
-                        })
-                    ->end()
-                    ->validate()
-                        ->ifTrue(function ($v) {
-                            return !isset($v['default']);
-                        })
-                        ->thenInvalid('You must specify a `default` area under `elenyum_open_api.areas`.')
+                            return !isset($v['with_tag']);
+                        })->thenInvalid('You must specify a area under `elenyum_open_api.area`.')
                     ->end()
                     ->useAttributeAsKey('name')
                     ->prototype('array')
@@ -88,10 +68,6 @@ final class Configuration implements ConfigurationInterface
                                 ->example(['^api_v1'])
                                 ->prototype('scalar')->end()
                             ->end()
-                            ->booleanNode('with_annotation')
-                                ->defaultFalse()
-                                ->info('whether to filter by annotation')
-                            ->end()
                             ->booleanNode('with_tag')
                                 ->defaultTrue()
                                 ->info('whether to filter by tag')
@@ -100,32 +76,6 @@ final class Configuration implements ConfigurationInterface
                                 ->defaultFalse()
                                 ->info('if set disables default routes without annotations')
                             ->end()
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('models')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('use_jms')->defaultFalse()->end()
-                    ->end()
-                    ->children()
-                        ->arrayNode('names')
-                            ->prototype('array')
-                                ->children()
-                                    ->scalarNode('alias')->isRequired()->end()
-                                    ->scalarNode('type')->isRequired()->end()
-                                    ->variableNode('groups')
-                                        ->defaultValue(null)
-                                        ->validate()
-                                            ->ifTrue(function ($v) { return null !== $v && !is_array($v); })
-                                            ->thenInvalid('Model groups must be either `null` or an array.')
-                                        ->end()
-                                    ->end()
-                                    ->arrayNode('areas')
-                                        ->defaultValue([])
-                                        ->prototype('scalar')->end()
-                                    ->end()
-                                ->end()
                         ->end()
                     ->end()
                 ->end()

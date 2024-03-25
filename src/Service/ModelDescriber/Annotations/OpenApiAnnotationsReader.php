@@ -22,10 +22,10 @@ class OpenApiAnnotationsReader
     private $annotationsReader;
     private $modelRegister;
 
-    public function __construct(?Reader $annotationsReader, ModelRegistry $modelRegistry, array $mediaTypes)
+    public function __construct(?Reader $annotationsReader, ModelRegistry $modelRegistry)
     {
         $this->annotationsReader = $annotationsReader;
-        $this->modelRegister = new ModelRegister($modelRegistry, $mediaTypes);
+        $this->modelRegister = new ModelRegister($modelRegistry);
     }
 
     public function updateSchema(\ReflectionClass $reflectionClass, OA\Schema $schema): void

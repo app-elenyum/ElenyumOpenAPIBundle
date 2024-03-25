@@ -18,19 +18,21 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwareInterface
 {
-
     /** @var PropertyInfoExtractorInterface */
     private $propertyInfo;
+
     /** @var ClassMetadataFactoryInterface|null */
     private $classMetadataFactory;
+
     /** @var Reader|null */
     private $doctrineReader;
+
     /** @var PropertyDescriberInterface|PropertyDescriberInterface[] */
     private $propertyDescriber;
-    /** @var string[] */
-    private $mediaTypes;
+
     /** @var NameConverterInterface|null */
     private $nameConverter;
+
     /** @var bool */
     private $useValidationGroups;
 
@@ -41,7 +43,6 @@ class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwar
         PropertyInfoExtractorInterface $propertyInfo,
         ?Reader $reader,
         $propertyDescribers,
-        array $options,
         NameConverterInterface $nameConverter = null,
         bool $useValidationGroups = false,
         ClassMetadataFactoryInterface $classMetadataFactory = null
@@ -49,7 +50,6 @@ class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwar
         $this->propertyInfo = $propertyInfo;
         $this->doctrineReader = $reader;
         $this->propertyDescriber = $propertyDescribers;
-        $this->mediaTypes = $options['media_types'];
         $this->nameConverter = $nameConverter;
         $this->useValidationGroups = $useValidationGroups;
         $this->classMetadataFactory = $classMetadataFactory;
@@ -69,7 +69,6 @@ class ObjectModelDescriber implements ModelDescriberInterface, ModelRegistryAwar
         $annotationsReader = new AnnotationsReader(
             $this->doctrineReader,
             $this->modelRegistry,
-            $this->mediaTypes,
             $this->useValidationGroups
         );
         $classResult = $annotationsReader->updateDefinition($reflClass, $schema);

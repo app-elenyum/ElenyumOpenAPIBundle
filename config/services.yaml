@@ -90,7 +90,6 @@ services:
 
   Elenyum\OpenAPI\Service\ModelDescriber\ObjectModelDescriber:
     arguments:
-      $options: '%elenyum_open_api.config%'
       $propertyDescribers: !tagged_iterator elenyum.openapi.property_describer
     tags: [ 'elenyum.openapi.model_describer' ]
 

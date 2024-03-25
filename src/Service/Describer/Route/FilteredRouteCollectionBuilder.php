@@ -3,7 +3,6 @@
 namespace Elenyum\OpenAPI\Service\Describer\Route;
 
 use Doctrine\Common\Annotations\Reader;
-use Elenyum\OpenAPI\Attribute\Areas;
 use Elenyum\OpenAPI\Attribute\Tag;
 use Elenyum\OpenAPI\Service\Util\ControllerReflector;
 use OpenApi\Annotations\AbstractAnnotation;
@@ -19,19 +18,15 @@ class FilteredRouteCollectionBuilder
     /** @var ControllerReflector */
     private ControllerReflector $controllerReflector;
 
-    /** @var string */
-    private string $area;
-
     /** @var array */
     private array $options;
 
     public function __construct(
         ?Reader $annotationReader,
         ControllerReflector $controllerReflector,
-        string $area = 'default',
         array $options = []
     ) {
-        $options = $options['areas'][$area];
+        $options = $options['area'];
 
         $resolver = new OptionsResolver();
         $resolver
@@ -39,21 +34,18 @@ class FilteredRouteCollectionBuilder
                 'path_patterns' => [],
                 'host_patterns' => [],
                 'name_patterns' => [],
-                'with_annotation' => true,
                 'with_tag' => true,
                 'disable_default_routes' => false
             ])
             ->setAllowedTypes('path_patterns', 'string[]')
             ->setAllowedTypes('host_patterns', 'string[]')
             ->setAllowedTypes('name_patterns', 'string[]')
-            ->setAllowedTypes('with_annotation', 'boolean')
             ->setAllowedTypes('with_tag', 'boolean')
             ->setAllowedTypes('disable_default_routes', 'boolean')
         ;
 
         $this->annotationReader = $annotationReader;
         $this->controllerReflector = $controllerReflector;
-        $this->area = $area;
         $this->options = $resolver->resolve($options);
     }
 
@@ -63,7 +55,6 @@ class FilteredRouteCollectionBuilder
         foreach ($routes->all() as $name => $route) {
             if ($this->matchPath($route)
                 && $this->matchHost($route)
-                && $this->matchAreas($route)
                 && $this->matchTag($route)
                 && $this->matchName($name)
                 && $this->defaultRouteDisabled($route)
@@ -109,41 +100,6 @@ class FilteredRouteCollectionBuilder
         }
 
         return 0 === count($this->options['name_patterns']);
-    }
-
-    private function matchAreas(Route $route): bool
-    {
-        if (false === $this->options['with_annotation']) {
-            return true;
-        }
-
-        $reflectionMethod = $this->controllerReflector->getReflectionMethod($route->getDefault('_controller'));
-
-        if (null === $reflectionMethod) {
-            return false;
-        }
-
-        /** @var Areas|null $areas */
-        $areas = $this->getAttributesAsAnnotation($reflectionMethod, Areas::class)[0] ?? null;
-
-        if (null === $areas) {
-            /** @var Areas|null $areas */
-            $areas = $this->getAttributesAsAnnotation($reflectionMethod->getDeclaringClass(), Areas::class)[0] ?? null;
-
-            if (null === $areas && null !== $this->annotationReader) {
-                /** @var Areas|null $areas */
-                $areas = $this->annotationReader->getMethodAnnotation(
-                    $reflectionMethod,
-                    Areas::class
-                );
-
-                if (null === $areas) {
-                    $areas = $this->annotationReader->getClassAnnotation($reflectionMethod->getDeclaringClass(), Areas::class);
-                }
-            }
-        }
-
-        return (null !== $areas) ? $areas->has($this->area) : false;
     }
 
     private function matchTag(Route $route): bool
@@ -218,8 +174,8 @@ class FilteredRouteCollectionBuilder
 
     /**
      * @param \ReflectionClass|\ReflectionMethod $reflection
-     *
-     * @return Areas[]
+     * @param string $className
+     * @return array
      */
     private function getAttributesAsAnnotation($reflection, string $className): array
     {

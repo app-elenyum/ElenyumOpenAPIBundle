@@ -20,13 +20,9 @@ class ModelRegister
     /** @var ModelRegistry */
     private $modelRegistry;
 
-    /** @var string[] */
-    private $mediaTypes;
-
-    public function __construct(ModelRegistry $modelRegistry, array $mediaTypes)
+    public function __construct(ModelRegistry $modelRegistry)
     {
         $this->modelRegistry = $modelRegistry;
-        $this->mediaTypes = $mediaTypes;
     }
 
     public function __invoke(Analysis $analysis, array $inputGroups = null)
@@ -64,9 +60,7 @@ class ModelRegister
                     'ref' => $this->modelRegistry->register(new Model($this->createType($model->type), $this->getGroups($model, $inputGroups), $model->options, $model->serializationContext)),
                 ];
 
-                foreach ($this->mediaTypes as $mediaType) {
-                    $this->createContentForMediaType($mediaType, $properties, $annotation, $analysis);
-                }
+                $this->createContentForMediaType($properties, $annotation, $analysis);
                 $this->detach($model, $annotation, $analysis);
 
                 continue;
@@ -143,24 +137,11 @@ class ModelRegister
     }
 
     private function createContentForMediaType(
-        string $type,
         array $properties,
         OA\AbstractAnnotation $annotation,
         Analysis $analysis
     ) {
-        switch ($type) {
-            case 'json':
-                $modelAnnotation = new OA\JsonContent($properties);
-
-                break;
-            case 'xml':
-                $modelAnnotation = new OA\XmlContent($properties);
-
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf("@Model annotation is not compatible with the media types '%s'. It must be one of 'json' or 'xml'.", implode(',', $this->mediaTypes)));
-        }
-
+        $modelAnnotation = new OA\JsonContent($properties);
         $annotation->merge([$modelAnnotation]);
         $analysis->addAnnotation($modelAnnotation, $properties['_context']);
     }

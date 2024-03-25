@@ -99,13 +99,7 @@ services:
       $modelDescribers: !tagged_iterator elenyum.openapi.model_describer
       $options: '%elenyum_open_api.config%'
 
-  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapQueryStringDescriber:
-    tags: [ 'elenyum.openapi.route_argument_describer' ]
-
-  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapRequestPayloadDescriber:
-    tags: [ 'elenyum.openapi.route_argument_describer' ]
-
-  Elenyum\OpenAPI\Service\Describer\Route\RouteArgumentDescriber\SymfonyMapQueryParameterDescriber:
-    tags: [ 'elenyum.openapi.route_argument_describer' ]
-
+  Elenyum\OpenAPI\Command\DumpOpenAPISchemaCommand:
+    arguments:
+      $rootPath: '%kernel.project_dir%'
 

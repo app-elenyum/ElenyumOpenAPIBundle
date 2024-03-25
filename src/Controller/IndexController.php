@@ -23,17 +23,19 @@ final class IndexController extends AbstractController
      * @param $area
      * @return JsonResponse
      */
-    public function __invoke(Request $request, $area = 'default')
+    public function __invoke(Request $request)
     {
         try {
-            $this->apiDocGenerator->setRequest($request);
+            $this->apiDocGenerator->setGroup($request->get('group'));
             $spec = $this->apiDocGenerator->generate();
 
             return JsonResponse::fromJsonString(
                 $this->jsonOpenApiRenderer->render($spec)
             );
         } catch (RenderInvalidArgumentException $e) {
-            throw new BadRequestHttpException(sprintf('Area "%s" is not supported as it isn\'t defined in config.', $area));
+            throw new BadRequestHttpException(
+                sprintf('Area is not supported as it isn\'t bad config. Error %s', $e->getMessage())
+            );
         }
     }
 }

@@ -15,7 +15,7 @@ class ApiDocGeneratorTest extends TestCase
     {
         $adapter = new ArrayAdapter();
         $generator = new ApiDocGenerator([new DefaultDescriber()], [], $adapter, null, new Generator());
-        $generator->setRequest(new Request());
+        $generator->setGroup(new Request());
         $this->assertJson(json_encode($generator->generate()));
     }
 
@@ -23,7 +23,7 @@ class ApiDocGeneratorTest extends TestCase
     {
         $adapter = new ArrayAdapter();
         $generator = new ApiDocGenerator([new DefaultDescriber()], [], $adapter, 'custom_id', new Generator());
-        $generator->setRequest(new Request());
+        $generator->setGroup(new Request());
         $this->assertJson(json_encode($generator->generate()));
     }
 }

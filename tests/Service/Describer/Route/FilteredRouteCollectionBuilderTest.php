@@ -2,13 +2,13 @@
 
 namespace Elenyum\OpenAPI\Tests\Service\Describer\Route;
 
+use Elenyum\OpenAPI\Attribute\Tag;
 use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Annotations\Reader;
 use Elenyum\OpenAPI\Service\Describer\Route\FilteredRouteCollectionBuilder;
 use Elenyum\OpenAPI\Service\Util\ControllerReflector;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Elenyum\OpenAPI\Attribute\Areas;
 
 class FilteredRouteCollectionBuilderTest extends TestCase
 {
@@ -22,10 +22,7 @@ class FilteredRouteCollectionBuilderTest extends TestCase
         $this->controllerReflector = $this->createMock(ControllerReflector::class);
         // Provide necessary options array based on your configuration.
         $options = [
-            'areas' => [
-                'default' => [
-                    // Your default options go here.
-                ],
+            'area' => [
                 // Any other areas you need.
             ],
         ];
@@ -33,7 +30,6 @@ class FilteredRouteCollectionBuilderTest extends TestCase
         $this->builder = new FilteredRouteCollectionBuilder(
             $this->annotationReader,
             $this->controllerReflector,
-            'default',
             $options
         );
     }
@@ -53,7 +49,7 @@ class FilteredRouteCollectionBuilderTest extends TestCase
         // Configure Annotations or Attributes match for the filter conditions.
         $this->annotationReader->method('getMethodAnnotation')
             ->withAnyParameters()
-            ->willReturn(new Areas(['value' => ['default']]));
+            ->willReturn(new Tag('test'));
 
         // Assert the RouteCollection contains the Route.
         $this->assertTrue($routes->get($routeName) instanceof Route);

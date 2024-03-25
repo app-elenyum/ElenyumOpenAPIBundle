@@ -14,7 +14,6 @@ use OpenApi\Generator;
 use OpenApi\Processors\ProcessorInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\HttpFoundation\Request;
 
 class ApiDocGenerator
 {
@@ -50,9 +49,9 @@ class ApiDocGenerator
     private $openApiVersion = null;
 
     /**
-     * @var Request
+     * @var ?string
      */
-    private Request $request;
+    private ?string $group;
 
     /**
      * @var array
@@ -83,7 +82,7 @@ class ApiDocGenerator
             return $this->openApi;
         }
 
-        $group = $this->request->get('group');
+        $group = $this->group;
         if (isset($this->options['cache']['enable']) && $this->options['cache']['enable'] === true && $this->cacheItemPool) {
             $item = $this->cacheItemPool->getItem($this->cacheItemId .'_'. $group);
             if ($item->isHit()) {
@@ -154,8 +153,8 @@ class ApiDocGenerator
         return $processors;
     }
 
-    public function setRequest(Request $request)
+    public function setGroup(?string $group)
     {
-        $this->request = $request;
+        $this->group = $group;
     }
 }

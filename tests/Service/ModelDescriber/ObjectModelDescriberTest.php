@@ -19,7 +19,6 @@ class ObjectModelDescriberTest extends TestCase
     private $propertyInfo;
     private $reader;
     private $propertyDescriber;
-    private $options;
     private $nameConverter;
     private $describer;
     private $modelRegistry;
@@ -32,9 +31,6 @@ class ObjectModelDescriberTest extends TestCase
         $this->propertyInfo = $this->createMock(PropertyInfoExtractorInterface::class);
         $this->reader = $this->createMock(Reader::class);
         $this->propertyDescriber = $this->createMock(PropertyDescriberInterface::class);
-        $this->options = [
-            'media_types' => ['application/json'],
-        ];
         $this->nameConverter = $this->createMock(NameConverterInterface::class);
         $this->modelRegistry = $this->createMock(ModelRegistry::class);
         $this->classMetadataFactory = $this->createMock(ClassMetadataFactoryInterface::class);
@@ -43,7 +39,6 @@ class ObjectModelDescriberTest extends TestCase
             $this->propertyInfo,
             $this->reader,
             $this->propertyDescriber,
-            $this->options,
             $this->nameConverter,
             false,
             $this->classMetadataFactory

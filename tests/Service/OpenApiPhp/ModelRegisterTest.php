@@ -26,14 +26,17 @@ class ModelRegisterTest extends TestCase
         $context = new Context(['version' => '1.0.0']);
         $analysis = new Analysis([], $context);
         $schema = new OA\Schema([]);
+        $response = new OA\Response([]);
         $modelAnnotation = new ModelAnnotation(['type' => 'MyModel']);
 
+        $response->attachables = [$modelAnnotation];
         // Assuming $schema would internally use annotation as a `$ref`
         $schema->ref = $modelAnnotation;
         $analysis->annotations->attach($schema);
+        $analysis->annotations->attach($response);
 
         // Setup expected behavior of the mock ModelRegistry
-        $this->modelRegistry->expects($this->once())
+        $this->modelRegistry->expects($this->exactly(2))
             ->method('register')
             ->willReturn('MyModelRef');
 

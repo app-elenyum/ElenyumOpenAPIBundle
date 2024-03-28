@@ -52,4 +52,25 @@ class ArrayPropertyDescriberTest extends TestCase
         $this->assertTrue($this->arrayPropertyDescriber->supports([$supportedType]));
         $this->assertFalse($this->arrayPropertyDescriber->supports([$unsupportedType]));
     }
+
+    public function testDescribeWidthCollection()
+    {
+        $type1 = new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true, null);
+        $type2 = new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true, null);
+        $type3 = new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true, null, [$type2]);
+        $type4 = new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true, null, [$type3, $type1]);
+        $property = new OA\Schema([]);
+        $groups = null;
+        $schema = new OA\Schema([]);
+        $context = [];
+
+        $this->propertyDescriber->expects($this->once())
+            ->method('describe')
+            ->with([$type3], $this->isInstanceOf(OA\Schema::class), $groups, $schema, $context);
+
+        $this->arrayPropertyDescriber->describe([$type4], $property, $groups, $schema, $context);
+
+        $this->assertSame('array', $property->type);
+        $this->assertInstanceOf(OA\Items::class, $property->items);
+    }
 }

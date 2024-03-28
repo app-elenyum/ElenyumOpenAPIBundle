@@ -24,7 +24,11 @@ class SymfonyConstraintAnnotationReaderTest extends TestCase
 
     public function testNotBlankConstraintSetsRequiredFieldOnSchema()
     {
-        $reflectionProperty = new ReflectionProperty(SomeClass::class, 'someProperty');
+        $class = new class {
+            public bool $propertyWithDocBlock = true;
+            public array $someProperty = [];
+        };
+        $reflectionProperty = new ReflectionProperty($class, 'someProperty');
         $property = new OA\Property([]);
         $context = new Context([]);
         $property->_context = $context;

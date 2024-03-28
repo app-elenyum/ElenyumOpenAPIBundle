@@ -12,30 +12,33 @@ use Symfony\Component\Routing\RouteCollection;
 
 class FilteredRouteCollectionBuilderTest extends TestCase
 {
-    private $annotationReader;
-    private $controllerReflector;
-    private $builder;
-
-    protected function setUp(): void
+    public function testFilterAddsRoutesDependingOnConditions()
     {
-        $this->annotationReader = $this->createMock(Reader::class);
-        $this->controllerReflector = $this->createMock(ControllerReflector::class);
+        $annotationReader = $this->createMock(Reader::class);
+        $controllerReflector = $this->createMock(ControllerReflector::class);
         // Provide necessary options array based on your configuration.
         $options = [
             'area' => [
                 // Any other areas you need.
             ],
+            'with_tag' => true,
+            'path_patterns' => [
+                'v'
+            ],
+            'host_patterns' => [
+                'v'
+            ],
+            'name_patterns' => [
+                'v'
+            ],
         ];
 
-        $this->builder = new FilteredRouteCollectionBuilder(
-            $this->annotationReader,
-            $this->controllerReflector,
+        $builder = new FilteredRouteCollectionBuilder(
+            $annotationReader,
+            $controllerReflector,
             $options
         );
-    }
 
-    public function testFilterAddsRoutesDependingOnConditions()
-    {
         $routes = new RouteCollection();
         // Set up a Route that passes the filter conditions.
         $routeName = 'valid_route';
@@ -43,14 +46,14 @@ class FilteredRouteCollectionBuilderTest extends TestCase
         // Configure the route to match your filter options.
         $routes->add($routeName, $route);
 
-        $this->controllerReflector->method('getReflectionMethod')
+        $controllerReflector->method('getReflectionMethod')
             ->willReturn(new \ReflectionMethod(SomeController::class, 'someMethod'));
 
         // Configure Annotations or Attributes match for the filter conditions.
-        $this->annotationReader->method('getMethodAnnotation')
+        $annotationReader->method('getMethodAnnotation')
             ->withAnyParameters()
             ->willReturn(new Tag('test'));
-
+        $builder->filter($routes);
         // Assert the RouteCollection contains the Route.
         $this->assertTrue($routes->get($routeName) instanceof Route);
         // Assert that only the expected routes are present.

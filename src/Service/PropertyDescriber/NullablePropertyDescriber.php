@@ -5,7 +5,7 @@ namespace Elenyum\OpenAPI\Service\PropertyDescriber;
 use OpenApi\Annotations as OA;
 use OpenApi\Generator;
 
-final class NullablePropertyDescriber implements PropertyDescriberInterface, PropertyDescriberAwareInterface
+class NullablePropertyDescriber implements PropertyDescriberInterface, PropertyDescriberAwareInterface
 {
     public function describe(array $types, OA\Schema $property, array $groups = null, ?OA\Schema $schema = null, array $context = [])
     {

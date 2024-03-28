@@ -5,6 +5,7 @@ namespace Elenyum\OpenAPI\Tests\Service\PropertyDescriber;
 use Elenyum\OpenAPI\Service\PropertyDescriber\RequiredPropertyDescriber;
 use Elenyum\OpenAPI\Service\PropertyDescriber\PropertyDescriberInterface;
 use OpenApi\Annotations as OA;
+use OpenApi\Generator;
 use PHPUnit\Framework\TestCase;
 
 class RequiredPropertyDescriberTest extends TestCase
@@ -64,6 +65,38 @@ class RequiredPropertyDescriberTest extends TestCase
         $this->requiredPropertyDescriber->describe($types, $property, null, $schema, []);
 
         $this->assertNotContains('testProperty', [$schema->required]);
+    }
+
+    public function testDescribeWithNotPropert()
+    {
+        $types = []; // Would normally be populated with Type instances
+        $property = new OA\Schema([]);
+        $property->property = 'testProperty';
+        $property->default = 'defaultValue';
+        $schema = new OA\Schema([]);
+
+        $this->decoratedDescriber->expects($this->any())
+            ->method('describe');
+
+        $this->requiredPropertyDescriber->describe($types, $property, null, $schema, []);
+
+        $this->assertEquals(Generator::UNDEFINED, $schema->required);
+    }
+
+    public function testDescribeWithNotSchema()
+    {
+        $types = []; // Would normally be populated with Type instances
+        $property = new OA\Property([]);
+        $property->property = 'testProperty';
+        $property->default = 'defaultValue';
+        $schema = null;
+
+        $this->decoratedDescriber->expects($this->any())
+            ->method('describe');
+
+        $this->requiredPropertyDescriber->describe($types, $property, null, $schema, []);
+
+        $this->assertNull($schema);
     }
 
     public function testSupports()

@@ -138,25 +138,9 @@ final class DefaultDescriber implements DescriberInterface
 
     public static function createChild(OA\AbstractAnnotation $parent, $class, array $properties = []): OA\AbstractAnnotation
     {
-        $nesting = self::getNestingIndexes($class);
-
-        if (!empty(array_intersect(array_keys($properties), $nesting))) {
-            throw new \InvalidArgumentException('Nesting Annotations is not supported.');
-        }
-
         return new $class(
             array_merge($properties, ['_context' => self::createContext(['nested' => $parent], $parent->_context)])
         );
-    }
-
-    private static function getNestingIndexes($class): array
-    {
-        return array_values(array_map(
-            function ($value) {
-                return \is_array($value) ? $value[0] : $value;
-            },
-            $class::$_nested
-        ));
     }
 
     /**

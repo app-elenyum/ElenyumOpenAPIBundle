@@ -12,7 +12,6 @@ use OpenApi\Generator;
  */
 class AnnotationsReader
 {
-    private $phpDocReader;
     private $openApiAnnotationsReader;
     private $symfonyConstraintAnnotationReader;
 
@@ -21,7 +20,6 @@ class AnnotationsReader
         ModelRegistry $modelRegistry,
         bool $useValidationGroups = false
     ) {
-        $this->phpDocReader = new PropertyPhpDocReader();
         $this->openApiAnnotationsReader = new OpenApiAnnotationsReader($annotationsReader, $modelRegistry);
         $this->symfonyConstraintAnnotationReader = new SymfonyConstraintAnnotationReader(
             $annotationsReader,
@@ -47,7 +45,6 @@ class AnnotationsReader
     public function updateProperty($reflection, OA\Property $property, array $serializationGroups = null): void
     {
         $this->openApiAnnotationsReader->updateProperty($reflection, $property, $serializationGroups);
-        $this->phpDocReader->updateProperty($reflection, $property);
         $this->symfonyConstraintAnnotationReader->updateProperty($reflection, $property, $serializationGroups);
     }
 

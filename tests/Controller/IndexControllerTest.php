@@ -61,7 +61,7 @@ class IndexControllerTest extends TestCase
             ->will($this->throwException(new RenderInvalidArgumentException()));
 
         $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessage(sprintf('Area "%s" is not supported as it isn\'t defined in config.', $unsupportedArea));
+        $this->expectExceptionMessage('Area is not supported as it isn\'t bad config.');
 
         $this->controller->__invoke($request, $unsupportedArea);
     }

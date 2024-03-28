@@ -68,9 +68,6 @@ class FilteredRouteCollectionBuilder
 
     private function matchPath(Route $route): bool
     {
-        if (true === $this->options['with_tag']) {
-            return true;
-        }
         foreach ($this->options['path_patterns'] as $pathPattern) {
             if (preg_match('{'.$pathPattern.'}', $route->getPath())) {
                 return true;

@@ -4,6 +4,7 @@ namespace Elenyum\OpenAPI\Tests\Service\DependencyInjection;
 
 use Elenyum\OpenAPI\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
@@ -27,6 +28,17 @@ class ConfigurationTest extends TestCase
         $this->assertIsArray($config['documentation']);
         $this->assertIsArray($config['area']);
     }
+    public function testConfigErrorTreeBuilder()
+    {
+        $configuration = new Configuration();
+
+        $this->expectException(InvalidConfigurationException::class);
+        $processor = new Processor();
+        $processor->processConfiguration(
+            $configuration,
+            [$this->getErrorTestConfig()]
+        );
+    }
 
     private function getValidTestConfig()
     {
@@ -38,6 +50,22 @@ class ConfigurationTest extends TestCase
             'documentation' => [
                 'info' => ['title' => 'Test API'],
             ],
+        ];
+    }
+
+    private function getErrorTestConfig()
+    {
+        return [
+            'cache' => [
+                'enable' => false,
+                'item_id' => null,
+            ],
+            'documentation' => [
+                'info' => ['title' => 'Test API'],
+            ],
+            'area' => [
+                'path_patterns' => []
+            ]
         ];
     }
 }

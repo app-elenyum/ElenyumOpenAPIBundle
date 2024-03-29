@@ -1,8 +1,8 @@
 {
-  "name": "elenyum/openapi",
-  "version": "0.1",
+  "name": "elenyum/open-api",
+  "version": "1.0",
   "type": "symfony-bundle",
-  "description": "Generates OpenAPI documentation from entity",
+  "description": "This bundle generates documentation and returns JSON formatted according to the OpenAPI specification.",
   "keywords": ["api", "documentation", "doc", "rest"],
   "license": "MIT",
   "authors": [

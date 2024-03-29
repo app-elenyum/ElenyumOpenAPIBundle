@@ -26,7 +26,13 @@ class FilteredRouteCollectionBuilder
         ControllerReflector $controllerReflector,
         array $options = []
     ) {
-        $options = $options['area'];
+        $options = [
+            'path_patterns' => $options['path_patterns'],
+            'host_patterns' => $options['host_patterns'],
+            'name_patterns' => $options['name_patterns'],
+            'with_tag' => $options['with_tag'],
+            'disable_default_routes' => $options['disable_default_routes'],
+        ];
 
         $resolver = new OptionsResolver();
         $resolver

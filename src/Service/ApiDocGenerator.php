@@ -45,7 +45,8 @@ class ApiDocGenerator
     {
         $group = $this->group;
         if (isset($this->options['cache']['enable']) && $this->options['cache']['enable'] === true && $this->cacheItemPool) {
-            $item = $this->cacheItemPool->getItem('elenyum_open_api_'. $group);
+            $cacheId = $this->options['cache']['item_id'] ?? 'elenyum_open_api_';
+            $item = $this->cacheItemPool->getItem($cacheId.'_'.$group);
             if ($item->isHit()) {
                 return $this->openapi = $item->get();
             }

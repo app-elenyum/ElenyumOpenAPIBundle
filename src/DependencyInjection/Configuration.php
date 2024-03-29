@@ -33,51 +33,37 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('documentation')
                     ->useAttributeAsKey('key')
                     ->info('The documentation used as base')
-                    ->example(['info' => ['title' => 'My App']])
+                    ->example([
+                        'info' => [
+                            'title' => 'My App',
+                            'description' => 'Description service',
+                            'version' => '1.0.0'
+                        ]
+                    ])
                     ->prototype('variable')->end()
                 ->end()
-                ->arrayNode('area')
-                    ->info('Filter the routes that are documented')
-                    ->defaultValue([
-                            'path_patterns' => [],
-                            'host_patterns' => [],
-                            'with_tag' => true,
-                            'name_patterns' => [],
-                            'disable_default_routes' => false,
-                        ])->validate()
-                        ->ifTrue(function ($v) {
-                            return !isset($v['with_tag']);
-                        })->thenInvalid('You must specify a area under `elenyum_open_api.area`.')
-                    ->end()
-                    ->useAttributeAsKey('name')
-                    ->prototype('array')
-                        ->addDefaultsIfNotSet()
-                        ->children()
-                            ->arrayNode('path_patterns')
-                                ->defaultValue([])
-                                ->example(['^/api', '^/api(?!/admin)'])
-                                ->prototype('scalar')->end()
-                            ->end()
-                            ->arrayNode('host_patterns')
-                                ->defaultValue([])
-                                ->example(['^api\.'])
-                                ->prototype('scalar')->end()
-                            ->end()
-                            ->arrayNode('name_patterns')
-                                ->defaultValue([])
-                                ->example(['^api_v1'])
-                                ->prototype('scalar')->end()
-                            ->end()
-                            ->booleanNode('with_tag')
-                                ->defaultTrue()
-                                ->info('whether to filter by tag')
-                            ->end()
-                            ->booleanNode('disable_default_routes')
-                                ->defaultFalse()
-                                ->info('if set disables default routes without annotations')
-                            ->end()
-                        ->end()
-                    ->end()
+                ->arrayNode('path_patterns')
+                    ->defaultValue([])
+                    ->example(['^/api', '^/api(?!/admin)'])
+                    ->prototype('scalar')->end()
+                ->end()
+                    ->arrayNode('host_patterns')
+                    ->defaultValue([])
+                    ->example(['^api\.'])
+                    ->prototype('scalar')->end()
+                ->end()
+                    ->arrayNode('name_patterns')
+                    ->defaultValue([])
+                    ->example(['^api_v1'])
+                    ->prototype('scalar')->end()
+                ->end()
+                    ->booleanNode('with_tag')
+                    ->defaultTrue()
+                    ->info('whether to filter by tag')
+                ->end()
+                    ->booleanNode('disable_default_routes')
+                    ->defaultFalse()
+                    ->info('if set disables default routes without annotations')
                 ->end()
             ->end();
 

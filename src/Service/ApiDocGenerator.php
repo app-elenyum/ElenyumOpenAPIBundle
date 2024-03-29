@@ -19,11 +19,11 @@ class ApiDocGenerator
     private ?string $group = null;
 
     /**
-     * @param $describers
-     * @param $modelRegistry
-     * @param $analysis
-     * @param $modelRegister
-     * @param $openapi
+     * @param Countable $describers
+     * @param ModelRegistry $modelRegistry
+     * @param Analysis $analysis
+     * @param ModelRegister $modelRegister
+     * @param OpenApi $openapi
      * @param CacheItemPoolInterface|null $cacheItemPool
      * @param Generator|null $generator
      * @param array $options

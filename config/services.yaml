@@ -7,12 +7,6 @@ services:
     public: true
     class: 'Elenyum\OpenAPI\Controller\IndexController'
 
-  #Commands
-#  Elenyum\OpenAPI\Command\TestCommand:
-#    public: true
-#    class: 'Elenyum\OpenAPI\Command\TestCommand'
-
-#  Elenyum\OpenAPI\Controller\IndexController: ~
 #  # makes classes in src/ available to be used as services
 #  # this creates a service per class whose id is the fully-qualified class name
   Elenyum\OpenAPI\:

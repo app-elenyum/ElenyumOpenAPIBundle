@@ -30,14 +30,14 @@ class ApiDocGenerator
      */
     public function __construct(
         /** @var DescriberInterface[] */
-        private Countable $describers,
-        private ModelRegistry $modelRegistry,
-        private Analysis $analysis,
-        private ModelRegister $modelRegister,
+        private readonly Countable $describers,
+        private readonly ModelRegistry $modelRegistry,
+        private readonly Analysis $analysis,
+        private readonly ModelRegister $modelRegister,
         private OpenApi $openapi,
-        private ?CacheItemPoolInterface $cacheItemPool,
-        private ?Generator $generator = null,
-        private array $options = [],
+        private readonly ?CacheItemPoolInterface $cacheItemPool,
+        private readonly ?Generator $generator = null,
+        private readonly array $options = [],
     ) {
     }
 

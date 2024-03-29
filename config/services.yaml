@@ -93,11 +93,42 @@ services:
       $propertyDescribers: !tagged_iterator elenyum.openapi.property_describer
     tags: [ 'elenyum.openapi.model_describer' ]
 
+  generator:
+    class: 'OpenApi\Generator'
+
+  context:
+    class: 'OpenApi\Context'
+
+  openapi:
+    class: 'OpenApi\Annotations\OpenApi'
+    arguments:
+      $properties: {'_context': '@context'}
+
+  modelRegistry:
+    class: 'Elenyum\OpenAPI\Service\Model\ModelRegistry'
+    arguments:
+      $modelDescribers: !tagged_iterator elenyum.openapi.model_describer
+      $api: '@openapi'
+
+  analysis:
+    class: 'OpenApi\Analysis'
+    arguments:
+      $context: '@context'
+
+  modelRegister:
+    class: 'Elenyum\OpenAPI\Service\OpenApiPhp\ModelRegister'
+    arguments:
+      $modelRegistry: '@modelRegistry'
+
   Elenyum\OpenAPI\Service\ApiDocGenerator:
     arguments:
       $describers: !tagged_iterator elenyum.openapi.describer
-      $modelDescribers: !tagged_iterator elenyum.openapi.model_describer
+      $modelRegistry: '@modelRegistry'
       $options: '%elenyum_open_api.config%'
+      $generator: '@generator'
+      $openapi: '@openapi'
+      $analysis: '@analysis'
+      $modelRegister: '@modelRegister'
 
   Elenyum\OpenAPI\Command\DumpOpenAPISchemaCommand:
     arguments:

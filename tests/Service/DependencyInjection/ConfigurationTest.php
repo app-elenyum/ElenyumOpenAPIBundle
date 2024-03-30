@@ -21,12 +21,10 @@ class ConfigurationTest extends TestCase
 
         $this->assertArrayHasKey('cache', $config);
         $this->assertArrayHasKey('documentation', $config);
-        $this->assertArrayHasKey('area', $config);
 
         $this->assertFalse($config['cache']['enable']);
         $this->assertNull($config['cache']['item_id']);
         $this->assertIsArray($config['documentation']);
-        $this->assertIsArray($config['area']);
     }
     public function testConfigErrorTreeBuilder()
     {

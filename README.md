@@ -5,12 +5,12 @@ Elenyum Open API
 This bundle generates documentation and returns JSON formatted according to the OpenAPI specification.
 
 
-## Install:
+## Install
 ```shell
 composer require elenyum/open-api
 ```
 
-## Configuration:
+## Configuration
 For adding configuration, create a config file in the project root directory, /config/packages/elenyum_open_api.yaml.
 In the config file add:
 
@@ -140,7 +140,7 @@ Filters the routes that will be documented and manages their visibility in the g
 
 
 
-#### Example:
+#### Example
 
 
 

@@ -18,9 +18,6 @@ class FilteredRouteCollectionBuilderTest extends TestCase
         $controllerReflector = $this->createMock(ControllerReflector::class);
         // Provide necessary options array based on your configuration.
         $options = [
-            'area' => [
-                // Any other areas you need.
-            ],
             'with_tag' => true,
             'path_patterns' => [
                 'v'

@@ -31,7 +31,7 @@ class FilteredRouteCollectionBuilder
             'host_patterns' => $options['host_patterns'],
             'name_patterns' => $options['name_patterns'],
             'with_tag' => $options['with_tag'],
-            'disable_default_routes' => $options['disable_default_routes'],
+            'disable_default_routes' => $options['disable_default_routes'] ?? false,
         ];
 
         $resolver = new OptionsResolver();

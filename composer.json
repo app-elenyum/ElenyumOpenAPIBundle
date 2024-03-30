@@ -22,7 +22,6 @@
   "require-dev": {
     "doctrine/annotations": "^2.0",
     "mikey179/vfsstream": "^1.6",
-    "phpdocumentor/reflection-docblock": "^5.3",
     "phpunit/phpunit": "^11.0",
     "symfony/options-resolver": "^7.0",
     "symfony/property-info": "^7.0",

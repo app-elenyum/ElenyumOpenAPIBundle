@@ -29,11 +29,10 @@ services:
     factory: ['@router', 'getRouteCollection']
 
   Elenyum\OpenAPI\Service\Describer\OpenApiPhpDescriber:
+    tags: [ 'elenyum.openapi.describer' ]
     arguments:
       $routeCollection: '@routeCollection'
       $filteredRouteCollectionBuilder: '@Elenyum\OpenAPI\Service\Describer\Route\FilteredRouteCollectionBuilder'
-
-    tags: [ 'elenyum.openapi.describer' ]
 
   Elenyum\OpenAPI\Service\Describer\DefaultDescriber:
     tags: [ 'elenyum.openapi.describer' ]

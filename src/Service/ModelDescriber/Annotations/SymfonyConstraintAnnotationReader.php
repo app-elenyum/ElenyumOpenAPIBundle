@@ -139,10 +139,13 @@ class SymfonyConstraintAnnotationReader
                 if (\is_int($annotation->value)) {
                     $property->minimum = $annotation->value;
                 }
-            }
+            },
         ];
         foreach ($annotations as $annotation) {
-            $map[get_class($annotation)]($annotation);
+            $mapClass = $map[get_class($annotation)] ?? null;
+            if (!empty($mapClass)) {
+                $mapClass($annotation);
+            }
         }
     }
 

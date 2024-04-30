@@ -95,8 +95,11 @@ class ModelRegister
         if (null === $model->groups) {
             return $inputGroups;
         }
+        if (null !== $inputGroups) {
+            return preg_grep(sprintf('#%s#', ...$inputGroups), $model->groups);
+        }
 
-        return array_merge($inputGroups ?? [], $model->groups);
+        return $model->groups;
     }
 
     private function detach(ModelAnnotation $model, OA\AbstractAnnotation $annotation, Analysis $analysis): void

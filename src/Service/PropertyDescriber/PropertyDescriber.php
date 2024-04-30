@@ -46,6 +46,17 @@ final class PropertyDescriber implements PropertyDescriberInterface, ModelRegist
     private function getPropertyDescriber(array $types): ?PropertyDescriberInterface
     {
         foreach ($this->propertyDescribers as $propertyDescriber) {
+            if ($propertyDescriber instanceof self) {
+                continue;
+            }
+
+            // Prevent infinite recursion
+            if (key_exists($this->getHash($types), $this->called)) {
+                if (in_array($propertyDescriber, $this->called[$this->getHash($types)], true)) {
+                    continue;
+                }
+            }
+
             if ($propertyDescriber instanceof ModelRegistryAwareInterface) {
                 $propertyDescriber->setModelRegistry($this->modelRegistry);
             }

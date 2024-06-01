@@ -88,7 +88,7 @@ class ModelRegistry
                 }
 
                 if (null === $schema) {
-                    $errorMessage = sprintf('Schema of type "%s" can\'t be generated, no describer supports it.', $this->typeToString($model->getType()));
+                    $errorMessage = sprintf('Schema of type "%s" can\'t be generated, no describer supports it.',$model->getType()->getClassName());
                     if (Type::BUILTIN_TYPE_OBJECT === $model->getType()->getBuiltinType() && !class_exists($className = $model->getType()->getClassName())) {
                         $errorMessage .= sprintf(' Class "\\%s" does not exist, did you forget a use statement, or typed it wrong?', $className);
                     }

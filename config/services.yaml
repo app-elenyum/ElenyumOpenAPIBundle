@@ -40,6 +40,13 @@ services:
       # @see ../src/DependencyInjection/ElenyumOpenAPIExtension.php:19
       $options: '%elenyum_open_api.config%'
 
+  Elenyum\OpenAPI\Service\Describer\ExternalDocDescriber:
+    tags: [ 'elenyum.openapi.describer' ]
+    arguments:
+      # @see ../src/DependencyInjection/ElenyumOpenAPIExtension.php:19
+      $options: '%elenyum_open_api.config%'
+      $overwrite: true
+
   Elenyum\OpenAPI\Service\ModelDescriber\EnumModelDescriber:
     tags: [ 'elenyum.openapi.model_describer' ]
 

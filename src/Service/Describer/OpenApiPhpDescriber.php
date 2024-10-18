@@ -3,6 +3,7 @@
 namespace Elenyum\OpenAPI\Service\Describer;
 
 use Doctrine\Common\Annotations\Reader;
+use Elenyum\Authorization\Attribute\Auth;
 use Elenyum\OpenAPI\Attribute\Operation;
 use Elenyum\OpenAPI\Attribute\Security;
 use Elenyum\OpenAPI\Service\Describer\Route\FilteredRouteCollectionBuilder;
@@ -76,7 +77,7 @@ final class OpenApiPhpDescriber
             $annotations = [];
             if (null !== $this->annotationReader) {
                 $annotations = array_filter($this->annotationReader->getMethodAnnotations($method), function ($v) {
-                    return $v instanceof OA\AbstractAnnotation;
+                    return $v instanceof OA\AbstractAnnotation && (class_exists(Auth::class) && $v instanceof Auth);
                 });
             }
 
@@ -115,6 +116,19 @@ final class OpenApiPhpDescriber
 
                 if ($annotation instanceof Security) {
                     $annotation->validate();
+
+                    if (null === $annotation->name) {
+                        $mergeProperties->security = [];
+
+                        continue;
+                    }
+
+                    $mergeProperties->security[] = [$annotation->name => $annotation->scopes];
+
+                    continue;
+                }
+
+                if ($annotation instanceof Auth) {
 
                     if (null === $annotation->name) {
                         $mergeProperties->security = [];

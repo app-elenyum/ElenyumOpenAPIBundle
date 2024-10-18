@@ -16,7 +16,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     description: 'Generated open api schema (documentation)',
     aliases: ['e:d']
 )]
-/** @todo сделать команду для генерации документации в open api спецификации */
 class DumpOpenAPISchemaCommand extends Command
 {
     public function __construct(

@@ -2,7 +2,7 @@
 
 namespace Elenyum\OpenAPI\Service\Describer;
 
-use Nelmio\ApiDocBundle\OpenApiPhp\Util;
+use Elenyum\OpenAPI\Service\OpenApiPhp\Util;
 use OpenApi\Annotations as OA;
 
 class ExternalDocDescriber implements DescriberInterface

@@ -63,10 +63,6 @@ class Model extends Attachable
         array $options = null,
         array $serializationContext = []
     ) {
-        if ($groups === null && isset($options['method']) && class_exists($type)) {
-            $groups = array_merge($this->getEntityGroups($type, $options['method']), ['Default']);
-        }
-
         parent::__construct($properties + [
                 'type' => $type,
                 'groups' => $groups,
@@ -75,24 +71,24 @@ class Model extends Attachable
             ]);
     }
 
-    /**
-     * @throws \ReflectionException
-     */
-    public function getEntityGroups(string $type, ?string $method = null): array
-    {
-        $reflectionClass = new ReflectionClass($type);
-
-        $attributeGroups = $reflectionClass->getAttributes(Groups::class);
-        if (isset($attributeGroups[0]) && isset($attributeGroups[0]?->getArguments()[0])) {
-            $groups = $attributeGroups[0]->getArguments()[0];
-            if (!empty($groups) && $method !== null) {
-                $method = mb_strtoupper($method);
-                $groups = preg_replace('/(\w+)/', $method.'_$1', $groups);
-            }
-
-            return $groups;
-        }
-
-        return [];
-    }
+//    /**
+//     * @throws \ReflectionException
+//     */
+//    public function getEntityGroups(string $type, ?string $method = null): array
+//    {
+//        $reflectionClass = new ReflectionClass($type);
+//
+//        $attributeGroups = $reflectionClass->getAttributes(Groups::class);
+//        if (isset($attributeGroups[0]) && isset($attributeGroups[0]?->getArguments()[0])) {
+//            $groups = $attributeGroups[0]->getArguments()[0];
+//            if (!empty($groups) && $method !== null) {
+//                $method = mb_strtoupper($method);
+//                $groups = preg_replace('/(\w+)/', $method.'_$1', $groups);
+//            }
+//
+//            return $groups;
+//        }
+//
+//        return [];
+//    }
 }
